@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bill;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 /**
  * Controller de gerenciamento de contas
@@ -19,9 +20,17 @@ class BillController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $orderedColumns = ['id', 'name',  'created_at'];
+
+        $limit = $request->display_qty ?? 10;
+        $sort = $request->sort ?? "desc";
+        $column = checkOrderBy($orderedColumns, $request->column, 'id');
+
+        $list = Bill::search($request)->orderBy($column, $sort)->paginate($limit);
+        return Inertia::render('Bill/Index', ['entities' => $list]);
+
     }
 
     /**

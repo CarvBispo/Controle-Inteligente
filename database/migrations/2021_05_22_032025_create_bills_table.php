@@ -22,7 +22,7 @@ class CreateBillsTable extends Migration
             $table->decimal('amount');
             $table->decimal('amount_tax');
             $table->decimal('amount_paid');
-            $table->unsignedInteger('measured_id');
+            $table->unsignedInteger('measure_id');
             $table->unsignedInteger('created_by');
             $table->unsignedInteger('updated_by');
             $table->string('file')->nullable();
@@ -30,7 +30,7 @@ class CreateBillsTable extends Migration
 
             $table->softDeletes();
 
-            $table->foreign('measured_id')->references('id')->on('entities');
+            $table->foreign('measure_id')->references('id')->on('entities');
             $table->foreign('updated_by')->references('id')->on('users');
 
         });

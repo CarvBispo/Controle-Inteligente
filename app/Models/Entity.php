@@ -64,7 +64,7 @@ class Entity extends Model
     }
 
     /**
-     *  Pesquisa por um grupo de usuários
+     *  realiza uma pesquisa
      * @param  Query $query
      * @param Request $request
      * @return Query
