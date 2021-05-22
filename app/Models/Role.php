@@ -13,7 +13,7 @@ class Role extends Model
      private $menu = [
             ["label" => "Administracao", "list" => [
                 ["label" => "Dashboard","name" => 'dashboard', "url" => 'dashboard',"icon" => "fas fa-tachometer-alt", "permission" => "dashboard.index"],
-                ["label" => "Instituições", "name" => 'entities', "url" => 'entities', "icon" => "fas fa-book", "permission" => "entities.index"],
+                ["label" => "Instituições", "name" => 'entities.index', "url" => 'entities', "icon" => "fas fa-book", "permission" => "entities.index"],
                 ["label" => "Grupos de Usuários", "name" => 'roles.index', "url" => 'roles',"icon" => "fas fa-user-shield", "permission" => "roles.index"],
             ]]
         ];
