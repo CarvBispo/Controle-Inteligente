@@ -6,32 +6,28 @@
             </h2>
         </template>
 
-        <div class="container py-12">
+        <div class="container py-12 flex m-auto">
             <breeze-validation-errors class="mb-4" />
 
-            <table class="table-auto">
-                <thead>
-                    <tr>
-                        <th>Title</th>
-                        <th>Author</th>
-                        <th>Views</th>
+            <table class="min-w-full table-auto">
+                <thead class="justify-between">
+                    <tr class="bg-gray-800">
+                      	<th class="px-16 py-2" data-column="id">ID</th>
+                        <th data-column="name">Nome</th>
+                        <th data-column="created_at">Cadastro</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Intro to CSS</td>
-                        <td>Adam</td>
-                        <td>858</td>
-                    </tr>
-                    <tr class="bg-emerald-200">
-                        <td>A Long and Winding Tour of the History of UI Frameworks and Tools and the Impact on Design</td>
-                        <td>Adam</td>
-                        <td>112</td>
-                    </tr>
-                    <tr>
-                        <td>Intro to JavaScript</td>
-                        <td>Chris</td>
-                        <td>1,280</td>
+                    <tr v-for="(role, index) in roles.data">
+                        <td>{{ role.id }}</td>
+                        <td>{{ role.name }}</td>
+                        <td>{{ role.created_at }}</td>
+                        <td>
+                            <inertia-link :href="route('roles.edit', role.id)" class="underline text-sm text-gray-600 hover:text-gray-900">
+                                Editar
+                            </inertia-link>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -61,6 +57,7 @@
             BreezeValidationErrors
         },
         mounted() {
+            console.log(this.roles)
         },
         data() {
             return {
@@ -71,8 +68,7 @@
         },
 
         props: {
-            auth: Object,
-            menu: Object,
+            roles: Object,
             errors: Object,
         },
         methods: {
@@ -84,3 +80,12 @@
         }
     }
 </script>
+
+
+<style>
+
+    th {
+        color: #e2e8f0;
+    }
+
+</style>
