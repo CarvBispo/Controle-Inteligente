@@ -25,6 +25,7 @@ class CreateBillsTable extends Migration
             $table->unsignedInteger('measured_id');
             $table->unsignedInteger('created_by');
             $table->unsignedInteger('updated_by');
+            $table->string('file')->nullable();
             $table->timestamps();
 
             $table->softDeletes();

@@ -5,6 +5,13 @@ namespace App\Http\Controllers;
 use App\Models\Bill;
 use Illuminate\Http\Request;
 
+/**
+ * Controller de gerenciamento de contas
+ *
+ * @author Lucas Souza <lucas@datapage.com.br>
+ * @since 22/05/2021
+ * @version 1.0.0
+ */
 class BillController extends Controller
 {
     /**

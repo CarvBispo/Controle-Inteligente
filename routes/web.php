@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BillController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EntityController;
 use App\Http\Controllers\RoleController;
@@ -32,6 +33,7 @@ Route::middleware(['auth', 'verified'])->group(function ()
     Route::get('/dashboard', [DashboardController::class, '__invoke'])->name('dashboard');
     Route::resource('/entities', EntityController::class);
     Route::resource('/roles', RoleController::class);
+    Route::resource('/bills', BillController::class);
 });
 
 require __DIR__.'/auth.php';
