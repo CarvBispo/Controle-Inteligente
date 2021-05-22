@@ -25,5 +25,10 @@
         "tailwindcss": "^2.1.2",
         "vue": "^3.0.5",
         "vue-loader": "^16.1.2"
+    },
+    "dependencies": {
+        "moment": "^2.29.1",
+        "node-sass": "^6.0.0",
+        "vue-moment": "^4.1.0"
     }
 }
