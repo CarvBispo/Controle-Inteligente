@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEntitiesUsersTable extends Migration
+class CreateEntityUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateEntitiesUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('entities_users', function (Blueprint $table) {
+        Schema::create('entity_user', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('entity_id');
             $table->unsignedInteger('user_id');
@@ -31,6 +31,6 @@ class CreateEntitiesUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('entities_users');
+        Schema::dropIfExists('entity_user');
     }
 }

@@ -52,6 +52,15 @@ class User extends Authenticatable
     }
 
     /**
+     * Retorna o relacionamento com as entidades
+     *
+     * @return BelongsToMany
+     */
+    public function entities() {
+        return $this->belongsToMany(Entity::class);
+    }
+
+    /**
      * retorna o menu do usuario
      *
      * @return BelongsToMany

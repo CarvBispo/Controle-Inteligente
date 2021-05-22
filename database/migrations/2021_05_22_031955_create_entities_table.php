@@ -20,6 +20,7 @@ class CreateEntitiesTable extends Migration
             $table->string('email')->unique();
             $table->unsignedBigInteger('refer_id')->nullable();
             $table->unsignedInteger('owner_id');
+            $table->json('address');
             $table->timestamps();
 
             $table->foreign('owner_id')->references('id')->on('users');
