@@ -2,29 +2,40 @@
     <breeze-authenticated-layout>
         <template #header>
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Instituições
+                Contas
             </h2>
         </template>
 
-        <div class="container py-12 flex m-auto">
+        <div class="container py-12 flex m-auto flex-col">
             <breeze-validation-errors class="mb-4" />
+
+            <div class="flex flex-end">
+                <div class="align-middle flex items-end py-2">
+                    <breeze-input id="search" type="text" class="mt-1 block w-full" v-on:blur="searchFilter()" v-model="search" autofocus placeholder="Buscar..."/>
+                </div>
+                <inertia-link :href="route('bills.create')" class="inline-flex ml-auto items-center px-4 py-2 mb-4 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150">
+                   Novo
+                </inertia-link>
+            </div>
 
             <table class="min-w-full table-auto">
                 <thead class="justify-between">
                     <tr class="bg-gray-800">
                       	<th class="" data-column="id">ID</th>
                         <th data-column="name">Nome</th>
+                        <th>Responsavel</th>
                         <th data-column="created_at">Cadastro</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(role, index) in roles.data">
-                        <td>{{ role.id }}</td>
-                        <td>{{ role.name }}</td>
-                        <td>{{ role.created_at }}</td>
+                    <tr v-for="(bill, index) in bills.data">
+                        <td>{{ bill.id }}</td>
+                        <td>{{ bill.name }}</td>
+                        <td>{{ bill.owner.name }}</td>
+                        <td>{{ bill.created_at }}</td>
                         <td>
-                            <inertia-link :href="route('roles.edit', role.id)" class="underline text-sm text-gray-600 hover:text-gray-900">
+                            <inertia-link :href="route('bills.edit', bill.id)" class="underline text-sm text-gray-600 hover:text-gray-900">
                                 Editar
                             </inertia-link>
                         </td>
@@ -46,7 +57,6 @@
     import BreezeLabel from '@/Components/Label'
     import BreezeValidationErrors from '@/Components/ValidationErrors'
 
-
     export default {
         components: {
             BreezeAuthenticatedLayout,
@@ -57,25 +67,21 @@
             BreezeValidationErrors
         },
         mounted() {
-            console.log(this.roles)
+            console.log(this.bills)
         },
         data() {
             return {
-                form: this.$inertia.form({
-                    search: ''
-                })
+                search: '',
             }
         },
 
         props: {
-            roles: Object,
+            bills: Object,
             errors: Object,
         },
         methods: {
-            submit() {
-                this.form.post(this.route('login'), {
-                    onFinish: () => this.form.reset('password'),
-                })
+            searchFilter() {
+                this.$inertia.replace(this.route('bills.index', {search: this.search}))
             }
         }
     }

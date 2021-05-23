@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Permission;
-use App\Models\Role;
+use App\Models\Bill;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
-class RoleController extends Controller
+/**
+ * Controller de gerenciamento de contas
+ *
+ * @author Lucas Souza <lucas@datapage.com.br>
+ * @since 22/05/2021
+ * @version 1.0.0
+ */
+class BillController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -25,8 +30,9 @@ class RoleController extends Controller
         $sort = $request->sort ?? "desc";
         $column = checkOrderBy($orderedColumns, $request->column, 'id');
 
-        $list = Role::search($request)->orderBy($column, $sort)->paginate($limit);
-        return Inertia::render('Role/Index', ['roles' => $list]);
+        $list = Bill::search($request)->orderBy($column, $sort)->paginate($limit);
+        return Inertia::render('Bill/Index', ['bills' => $list]);
+
     }
 
     /**
@@ -36,7 +42,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        return $this->form(new Role());
+        return $this->form(new Bill());
     }
 
     /**
@@ -47,39 +53,48 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validation = $this->validation($request);
+
+        if (!$validation->fails()) {
+
+            if ($this->save(new Bill(), $request)) {
+
+                return redirect( route('bills.index'));
+            } else {
+                return back()->withInput();
+            }
+        } else {
+            return back()->withErrors($validation)->withInput();
+        }
     }
+
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Role  $role
+     * @param  \App\Models\Bill  $bill
      * @return \Illuminate\Http\Response
      */
-    public function edit(Role $role)
+    public function edit(Bill $bill)
     {
-        if ( $role) {
-            return $this->form($role);
-        } else {
-           return false;
-        }
+        return $this->form($bill);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Role  $role
+     * @param  \App\Models\Bill  $bill
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Role $role)
+    public function update(Request $request, Bill $bill)
     {
-        $validation = $this->validation($request);
+         $validation = $this->validation($request);
 
         if (!$validation->fails()) {
 
-            if ($this->save($role, $request)) {
-                return Redirect::route('roles.index');
+            if ($this->save($bill, $request)) {
+                return Redirect::route('bills.index');
             } else {
                 return back()->withInput();
             }
@@ -92,10 +107,10 @@ class RoleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Role  $role
+     * @param  \App\Models\Bill  $bill
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Role $role)
+    public function destroy(Bill $bill)
     {
         //
     }
@@ -106,17 +121,9 @@ class RoleController extends Controller
      * @param Role $group
      * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
      */
-    private function form(Role $role)
+    private function form(Bill $bill)
     {
-
-        //Obtem todas as regras
-        $permissions = Permission::orderBy('section')->orderBy('name')->get();
-
-        //agrupa a collection por seção
-        $permissions = $permissions->groupBy('section');
-        $role->load('permissions');
-
-        return Inertia("Role/Form", ['role' => $role, 'permissions' => $permissions]);
+        return Inertia("Bill/Form", ['bill' => $bill]);
     }
 
 
@@ -143,25 +150,15 @@ class RoleController extends Controller
 
 
     /**
-     * store Role in database
-     * @param Role $role
+     * store Bill in database
+     * @param Bill $bill
      * @param Request $request
      */
-    private function save(Role $role, Request $request)
+    private function save(Bill $bill, Request $request)
     {
 
         try {
-            DB::transaction(function () use ($request, $role) {
-                $role->name = $request->name;
-                $role->save();
-                $permissions = collect($request->permissions)->map(function ($item) {
-                    return $item['id'];
-                });
-
-                $role->permissions()->detach();
-                $role->permissions()->attach($permissions);
-            });
-            return true;
+            return $bill->save();
         } catch (\Exception $e) {
             dd($e);
             return back()->with([
@@ -169,5 +166,4 @@ class RoleController extends Controller
             ]);
         }
     }
-
 }

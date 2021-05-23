@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
+/**
+ * Classs para os grupos de usuarios
+ *
+ * @author Lucas Souza <lucas@datapage.com.br>
+ * @since 22/05/2021
+ * @version 1.0.0
+ */
 class Role extends Model
 {
     use HasFactory;
@@ -13,12 +20,14 @@ class Role extends Model
      private $menu = [
             ["label" => "Administracao", "list" => [
                 ["label" => "Dashboard","name" => 'dashboard', "url" => 'dashboard',"icon" => "fas fa-tachometer-alt", "permission" => "dashboard.index"],
-                ["label" => "Instituições", "name" => 'entities', "url" => 'entities', "icon" => "fas fa-book", "permission" => "entities.index"],
+                ["label" => "Contas", "name" => 'bills.index', "url" => 'bills', "icon" => "fas fa-book", "permission" => "bills.index"],
+                ["label" => "Instituições", "name" => 'entities.index', "url" => 'entities', "icon" => "fas fa-book", "permission" => "entities.index"],
                 ["label" => "Grupos de Usuários", "name" => 'roles.index', "url" => 'roles',"icon" => "fas fa-user-shield", "permission" => "roles.index"],
             ]]
         ];
 
 
+    protected $dateFormat = 'd/m/Y';
     /**
      * Retorna os usuários do grupo.
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
