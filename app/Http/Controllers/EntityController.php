@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Entity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
@@ -158,6 +159,8 @@ class EntityController extends Controller
     {
 
         try {
+
+            DB::beginTransaction();
             $user_id = Auth::user()->id;
             $entity->name = $request->name;
             $entity->phone = $request->phone;
@@ -169,10 +172,13 @@ class EntityController extends Controller
 
             $entity->users()->attach([$user_id]);
 
+            DB::commit();
+
             return true;
 
 
         } catch (\Exception $e) {
+            DB::rollBack();
             dd($e);
             return back()->with([
                 'message' => 'Nao foi possivel salvar.',

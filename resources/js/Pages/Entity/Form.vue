@@ -100,7 +100,7 @@
         data() {
             return {
                 form: this.$inertia.form({
-                    id: this.entity.id,
+                    id: this.entity?.id,
                     name: this.entity.name,
                     refer_id: this.entity.refer_id,
                     phone: this.entity.phone,
@@ -129,7 +129,7 @@
         methods: {
             submit() {
                if (this.form.id) {
-                    this.form.put(this.route('entities.update', this.role.id))
+                    this.form.put(this.route('entities.update', this.form.id))
                } else {
                    this.form.post(this.route('entities.store'))
                }

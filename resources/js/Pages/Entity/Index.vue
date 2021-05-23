@@ -9,8 +9,11 @@
         <div class="container py-12 flex m-auto flex-col">
             <breeze-validation-errors class="mb-4" />
 
-            <div class="flex flex-end ml-auto">
-                <inertia-link :href="route('entities.create')" class="inline-flex items-center px-4 py-2 mb-4 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150">
+            <div class="flex flex-end">
+                <div class="align-middle flex items-end py-2">
+                    <breeze-input id="search" type="text" class="mt-1 block w-full" v-on:blur="searchFilter()" v-model="search" autofocus placeholder="Buscar..."/>
+                </div>
+                <inertia-link :href="route('entities.create')" class="inline-flex ml-auto items-center px-4 py-2 mb-4 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150">
                    Novo
                 </inertia-link>
             </div>
@@ -65,13 +68,11 @@
             BreezeValidationErrors
         },
         mounted() {
-            console.log(this.entities)
+
         },
         data() {
             return {
-                form: this.$inertia.form({
-                    search: ''
-                })
+                search: this.route.search
             }
         },
 
@@ -80,10 +81,8 @@
             errors: Object,
         },
         methods: {
-            submit() {
-                this.form.post(this.route('login'), {
-                    onFinish: () => this.form.reset('password')
-                })
+            searchFilter() {
+                this.$inertia.get(this.route('entities.index', {search: this.search}))
             }
         }
     }

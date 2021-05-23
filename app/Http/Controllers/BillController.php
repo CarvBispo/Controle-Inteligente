@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Bill;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 /**
@@ -29,7 +31,7 @@ class BillController extends Controller
         $column = checkOrderBy($orderedColumns, $request->column, 'id');
 
         $list = Bill::search($request)->orderBy($column, $sort)->paginate($limit);
-        return Inertia::render('Bill/Index', ['entities' => $list]);
+        return Inertia::render('Bill/Index', ['bills' => $list]);
 
     }
 
@@ -40,7 +42,7 @@ class BillController extends Controller
      */
     public function create()
     {
-        //
+        return $this->form(new Bill());
     }
 
     /**
@@ -51,19 +53,21 @@ class BillController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validation = $this->validation($request);
+
+        if (!$validation->fails()) {
+
+            if ($this->save(new Bill(), $request)) {
+
+                return redirect( route('bills.index'));
+            } else {
+                return back()->withInput();
+            }
+        } else {
+            return back()->withErrors($validation)->withInput();
+        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Bill  $bill
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Bill $bill)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -73,7 +77,7 @@ class BillController extends Controller
      */
     public function edit(Bill $bill)
     {
-        //
+        return $this->form($bill);
     }
 
     /**
@@ -85,7 +89,19 @@ class BillController extends Controller
      */
     public function update(Request $request, Bill $bill)
     {
-        //
+         $validation = $this->validation($request);
+
+        if (!$validation->fails()) {
+
+            if ($this->save($bill, $request)) {
+                return Redirect::route('bills.index');
+            } else {
+                return back()->withInput();
+            }
+        } else {
+
+            return back()->withErrors($validation)->withInput();
+        }
     }
 
     /**
@@ -97,5 +113,57 @@ class BillController extends Controller
     public function destroy(Bill $bill)
     {
         //
+    }
+
+
+     /**
+     * Retorna a view para edição/criação de formulário
+     * @param Role $group
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     */
+    private function form(Bill $bill)
+    {
+        return Inertia("Bill/Form", ['bill' => $bill]);
+    }
+
+
+    /**
+     * Make validadtion of role crud
+     * @param Request $request
+     * @return $validator
+     */
+    private function validation(Request $request)
+    {
+
+        $validator = Validator::make($request->all(), [
+            "name" => "required",
+        ], [
+            "name.required" => "O campo de nome é obrigatório.",
+        ]);
+
+        $validator->sometimes('id', 'required|numeric', function ($request) {
+            return $request->_method == 'PUT';
+        });
+
+        return $validator;
+    }
+
+
+    /**
+     * store Bill in database
+     * @param Bill $bill
+     * @param Request $request
+     */
+    private function save(Bill $bill, Request $request)
+    {
+
+        try {
+            return $bill->save();
+        } catch (\Exception $e) {
+            dd($e);
+            return back()->with([
+                'message' => 'Nao foi possivel salvar.',
+            ]);
+        }
     }
 }

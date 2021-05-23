@@ -11,6 +11,8 @@ class Bill extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $dateFormat = 'd/m/Y';
+
     protected $fillable = [
         'origin',
         'reference_month',

@@ -27,6 +27,7 @@ class Role extends Model
         ];
 
 
+    protected $dateFormat = 'd/m/Y';
     /**
      * Retorna os usuários do grupo.
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
